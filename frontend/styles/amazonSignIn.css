@@ -1,0 +1,278 @@
+/* Amazon Ember Font */
+@import url(https://db.onlinewebfonts.com/c/157c6cc36dd65b1b2adc9e7f3329c761?family=Amazon+Ember+Regular);
+
+* {
+  font-family: "Amazon Ember Regular";
+  margin: 0;
+  box-sizing: border-box;
+  color: #111111;
+}
+body {
+  padding: 14px 18px;
+  height: 100vh;
+}
+
+/* Header Styles */
+
+.logoContainer {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  margin: auto;
+}
+
+header {
+  display: flex;
+}
+
+.logoContainer > img {
+  width: 103px;
+  height: 31px;
+}
+
+/* Main Style */
+
+main {
+  display: flex;
+  /* justify-content: center;
+  align-items: center; */
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.logInFormContainer {
+  border: 1px solid #1111112a;
+  width: 348px;
+  height: auto;
+  padding: 20px 26px;
+  border-radius: 10px;
+  margin: auto;
+}
+
+/* .logInFormContainer > img {
+  width: 20px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+} */
+
+.signInLabel {
+  font-size: 28px;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.inputLabel {
+  font-size: 13px;
+  font-weight: bold;
+  padding-bottom: 2px;
+}
+
+input {
+  margin-bottom: 14px;
+  width: 100%;
+  height: 31px;
+  padding: 3px 7px;
+  outline: none;
+  font-size: 13px;
+  border-radius: 3px;
+  border: 1px solid #1111117e;
+}
+
+.continueButton {
+  width: 100%;
+  padding: 1px 6px;
+  height: 29px;
+  background-color: #ffd814;
+  border: none;
+  border-radius: 8px;
+  font-family: "Amazon Ember Regular";
+  font-size: 13px;
+  /* cursor: pointer; */
+}
+
+.conditionLabel {
+  margin-top: 18px;
+  font-size: 12px;
+  margin-bottom: 22px;
+}
+
+.logInFormContainer {
+  position: relative;
+}
+
+.passwordContainer {
+  position: relative;
+}
+
+.passwordContainer input[type="password"] {
+  width: 100%;
+  padding-right: 30px; /* Make space for the icon */
+}
+
+.passwordContainer img {
+  position: absolute;
+  width: 20px;
+  top: 35%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.warning {
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: red;
+  text-align: center;
+  display: none;
+}
+
+span {
+  color: #0066c0;
+  text-decoration: underline;
+}
+
+span:hover,
+.dropDownLink > p:hover {
+  cursor: pointer;
+  color: #a08a1bf8;
+}
+
+.linkSection > span {
+  text-decoration: none;
+}
+
+.linkSection > span:hover {
+  text-decoration: underline;
+}
+
+.linkSection {
+  font-size: 13px;
+}
+
+.linkSection > p {
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.dropDownLink > .dropdDown {
+  font-size: 13px;
+  display: grid;
+  grid-template-columns: 5% 95%;
+  grid-template-rows: 100%;
+  align-items: center;
+  height: max-content;
+}
+
+.dropDownLink .dropdDown p,
+.dropDownLink .menuList p {
+  color: #0066c0;
+}
+
+.dropDownLink p:hover,
+.menuLis p {
+  text-decoration: underline;
+}
+.dropDownIcon {
+  transform: rotate(270deg);
+  cursor: pointer;
+  margin-bottom: 1px;
+}
+
+.menuList {
+  color: #0066c0;
+  font-size: 13px;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 50% 50%;
+  padding-left: 13px;
+}
+
+.menuList p {
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.menuList p:hover,
+.dropdDown p:hover {
+  color: #a08a1bf8;
+  cursor: pointer;
+}
+
+.dropDownLink {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.26);
+  padding-bottom: 20px;
+}
+
+.createAccountContainer {
+  border-top: 1px solid rgba(0, 0, 0, 0.26);
+  width: 348px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.createAccountContainer > button {
+  width: 100%;
+  font-size: 13px;
+  height: 29px;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  background-color: transparent;
+  border-radius: 10px;
+  color: #0f1111;
+}
+
+.createAccountContainer > p {
+  font-size: 12px;
+  color: #767676;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+footer {
+  margin-top: 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.26);
+  height: 20%;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  grid-template-columns: 100%;
+}
+
+.link,
+footer > p {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 11px;
+  color: #555555;
+}
+
+footer > p {
+  padding-top: 20px;
+}
+
+.link ul {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+ul li {
+  color: #0066c0;
+  font-size: 11px;
+  margin: 0 20px;
+}
+
+ul li:hover {
+  color: #a08a1bf8;
+  cursor: pointer;
+  text-decoration: underline;
+}
