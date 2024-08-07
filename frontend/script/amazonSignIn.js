@@ -27,7 +27,7 @@ const validateUser = () => {
 
   if (input.email && input.password) {
     if (input.email === "user" && input.password === "password") {
-      window.location.href = "dashboard.html";
+      window.location.href = "amazon.html";
     } else {
       displayWarning();
     }
