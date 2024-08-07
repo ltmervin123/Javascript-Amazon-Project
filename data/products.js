@@ -47,7 +47,7 @@ const products = [
   },
   {
     id: "54e0eccd-8f36-462b-b68a-8182611d9add",
-    image: "images/products/black-2-slot-toaster.jpg",
+    image: "../images/products/black-2-slot-toaster.jpg",
     name: "2 Slot Toaster - Black",
     rating: {
       stars: 5,
@@ -98,7 +98,7 @@ const products = [
       count: 317
     },
     priceCents: 2400,
-    keywords: [
+    keywords: [,
       "hoodies",
       "sweaters",
       "apparel"
