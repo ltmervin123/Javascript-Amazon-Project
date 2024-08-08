@@ -1,7 +1,8 @@
-//Add to cart functionality
+import { products } from "../../data/products.js";
+import { cart } from "./cart.js";
+
 const productGrid = document.querySelector(".products-grid");
 const cartQuantity = document.querySelector(".cart-quantity");
-let quantity = 0;
 
 const generateHtml = () => {
   let html = "";
@@ -62,46 +63,62 @@ const generateHtml = () => {
   });
   productGrid.innerHTML = html;
 };
+
 generateHtml();
 
 const addToCartButton = document.querySelectorAll(".add-to-cart-button");
 
 addToCartButton.forEach((button) => {
   button.addEventListener("click", () => {
-    const productId = button.getAttribute("data-product-id");
-    const productName = button.getAttribute("data-product-name");
-    const productPriceInCent = button.getAttribute("data-product-price-cent");
-    // const quantitySelect = event.target
-    //   .closest(".product-container")
-    //   .querySelector(".product-quantity").value;
+    const currentProduct = {
+      productId: button.getAttribute("data-product-id"),
+      productName: button.getAttribute("data-product-name"),
+      productPriceInCent: button.getAttribute("data-product-price-cent"),
+      quantity: event.target
+        .closest(".product-container")
+        .querySelector(".product-quantity").value,
+    };
 
-    // Check if the product already exists in the cart
-    if (findProductById(productId)) {
-      // If the product is found, store it in a variable
-      const matchingItem = findProductById(productId);
-
-      // Increment the quantity of the existing product by 1
-      matchingItem.quantity++;
+    if (findProductById(currentProduct.productId)) {
+      const matchingItem = findProductById(currentProduct.productId);
+      matchingItem.quantity =
+        parseInt(currentProduct.quantity) + parseInt(matchingItem.quantity);
     } else {
-      
-      // If the product is not found, add a new product to the cart with the provided details
-      cart.push({
-        productId,
-        productName,
-        quantity,
-        productPriceInCent,
-      });
+      addToCart(currentProduct);
     }
+    updateQuantity(currentProduct.productId);
     console.log(cart);
+    addTextEffectWhenItemIsAdded(button);
   });
 });
 
-// Function to find a product in the cart by its productId
-const findProductById = (id) => {
-  return cart.find((product) => product.productId === id);
+const findProductById = (productId) => {
+  return cart.find((product) => product.productId === productId);
 };
 
-const updateQuantity = () => {
-  quantity++;
+const updateQuantity = (productId) => {
+  const quantity = cart.length;
+  console.log(quantity);
   cartQuantity.textContent = quantity;
 };
+
+const addToCart = (currentProduct) => {
+  cart.push({
+    productId: currentProduct.productId,
+    productName: currentProduct.productName,
+    quantity: currentProduct.quantity,
+    productPriceInCent: currentProduct.productPriceInCent,
+  });
+};
+
+function addTextEffectWhenItemIsAdded(button) {
+  const productContainer = button.closest(".product-container");
+  const addedToCartMessage = productContainer.querySelector(".added-to-cart");
+
+  // Set initial opacity
+  addedToCartMessage.style.opacity = 1;
+
+  setTimeout(() => {
+    addedToCartMessage.style.opacity = 0;
+  }, 1500);
+}
