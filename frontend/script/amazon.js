@@ -1,10 +1,11 @@
 import { products } from "../../data/products.js";
 import {
   cart,
-  findProductById,
+  findProductInCart,
   addToCart,
   addTextEffectWhenItemIsAdded,
 } from "./cart.js";
+import { currencyFormatter } from "../script/utils/money.js";
 
 const productGrid = document.querySelector(".products-grid");
 const cartQuantity = document.querySelector(".cart-quantity");
@@ -31,7 +32,7 @@ function generateHtml() {
         </div>
 
         <div class="product-price">
-          $${products.priceCents / 100}
+          $${currencyFormatter(products.priceCents)}
         </div>
 
         <div class="product-quantity-container">
@@ -85,7 +86,7 @@ addToCartButton.forEach((button) => {
         .querySelector(".product-quantity").value,
     };
 
-    const matchingItem = findProductById(currentProduct.productId);
+    const matchingItem = findProductInCart(currentProduct.productId);
     if (matchingItem) {
       matchingItem.quantity =
         parseInt(currentProduct.quantity) + parseInt(matchingItem.quantity);

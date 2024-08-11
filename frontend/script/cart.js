@@ -1,8 +1,7 @@
 // import { cartQuantity } from "./amazon.js";
-
 export let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-export const findProductById = (productId) => {
+export const findProductInCart = (productId) => {
   return cart.find((product) => product.productId === productId);
 };
 
@@ -27,6 +26,7 @@ export function addTextEffectWhenItemIsAdded(button) {
     addedToCartMessage.style.opacity = 0;
   }, 1500);
 }
+
 function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }

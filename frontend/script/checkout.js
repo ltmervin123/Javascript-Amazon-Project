@@ -1,5 +1,7 @@
 import { cart } from "./cart.js";
-import { products } from "../../data/products.js";
+import { findProductInfoById } from "../../data/products.js";
+import { currencyFormatter } from "./utils/money.js";
+
 
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
@@ -7,11 +9,11 @@ const checkOutHeaderSection = document.querySelector(
   ".js-checkout-header-middle-section"
 );
 let orderSummaryHtml = "";
-let paymentSummaryHtml = "";
 
 function generateOrderSummary() {
   cart.forEach((product) => {
-    let matchingProduct = findProductById(product.productId);
+    let matchingProduct = findProductInfoById(product.productId);
+    console.log(matchingProduct);
 
     orderSummaryHtml += `<div class="cart-item-container">
         <div class="delivery-date">
@@ -27,13 +29,11 @@ function generateOrderSummary() {
               ${matchingProduct.name}
             </div>
             <div class="product-price">
-              $${matchingProduct.priceCents / 100}
+              $${currencyFormatter(matchingProduct.priceCents)}
             </div>
             <div class="product-quantity">
               <span>
-                Quantity: <span class="quantity-label">${
-                  product.quantity
-                }</span>
+                Quantity: <span class="quantity-label">${product.quantity}</span>
               </span>
               <span class="update-quantity-link link-primary">
                 Update
@@ -51,7 +51,7 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio" checked
                 class="delivery-option-input"
-                name="delivery-option-1">
+                name="delivery-option-${matchingProduct.productId}">
               <div>
                 <div class="delivery-option-date">
                   Tuesday, June 21
@@ -64,7 +64,7 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-1">
+                name="delivery-option-${matchingProduct.productId}">
               <div>
                 <div class="delivery-option-date">
                   Wednesday, June 15
@@ -77,7 +77,7 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-1">
+                name="delivery-option-${matchingProduct.productId}">
               <div>
                 <div class="delivery-option-date">
                   Monday, June 13
@@ -110,14 +110,44 @@ function generateCheckOutItem() {
   }
 
   checkOutHeaderSection.innerHTML = checkOutHeaderSectionHtml;
-  console.log(cart);
 }
 
-function generatePaymentSummary() {}
+function generatePaymentSummary() {
+  paymentSummaryContainer.innerHTML = `<div class="payment-summary-title">
+  Order Summary
+</div>
 
-const findProductById = (productId) => {
-  return products.find((product) => product.id === productId);
-};
+<div class="payment-summary-row">
+  <div>Items (3):</div>
+  <div class="payment-summary-money">$42.75</div>
+</div>
+
+<div class="payment-summary-row">
+  <div>Shipping &amp; handling:</div>
+  <div class="payment-summary-money">$4.99</div>
+</div>
+
+<div class="payment-summary-row subtotal-row">
+  <div>Total before tax:</div>
+  <div class="payment-summary-money">$47.74</div>
+</div>
+
+<div class="payment-summary-row">
+  <div>Estimated tax (10%):</div>
+  <div class="payment-summary-money">$4.77</div>
+</div>
+
+<div class="payment-summary-row total-row">
+  <div>Order total:</div>
+  <div class="payment-summary-money">$52.51</div>
+</div>
+
+<button class="place-order-button button-primary">
+  Place your order
+</button>`;
+}
 
 generateOrderSummary();
 generateCheckOutItem();
+generatePaymentSummary();
+
