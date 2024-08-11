@@ -1,11 +1,16 @@
 import { products } from "../../data/products.js";
-import { cart } from "./cart.js";
+import {
+  cart,
+  findProductById,
+  addToCart,
+  addTextEffectWhenItemIsAdded,
+} from "./cart.js";
 
 const productGrid = document.querySelector(".products-grid");
 const cartQuantity = document.querySelector(".cart-quantity");
+let html = "";
 
-const generateHtml = () => {
-  let html = "";
+function generateHtml() {
   products.forEach((products) => {
     html += `<div class="product-container">
         <div class="product-image-container">
@@ -62,9 +67,10 @@ const generateHtml = () => {
       </div>`;
   });
   productGrid.innerHTML = html;
-};
+}
 
 generateHtml();
+updateCartQuantity();
 
 const addToCartButton = document.querySelectorAll(".add-to-cart-button");
 
@@ -79,46 +85,19 @@ addToCartButton.forEach((button) => {
         .querySelector(".product-quantity").value,
     };
 
-    if (findProductById(currentProduct.productId)) {
-      const matchingItem = findProductById(currentProduct.productId);
+    const matchingItem = findProductById(currentProduct.productId);
+    if (matchingItem) {
       matchingItem.quantity =
         parseInt(currentProduct.quantity) + parseInt(matchingItem.quantity);
     } else {
       addToCart(currentProduct);
     }
-    updateQuantity(currentProduct.productId);
-    console.log(cart);
+    updateCartQuantity();
     addTextEffectWhenItemIsAdded(button);
   });
 });
 
-const findProductById = (productId) => {
-  return cart.find((product) => product.productId === productId);
-};
-
-const updateQuantity = (productId) => {
+function updateCartQuantity() {
   const quantity = cart.length;
-  console.log(quantity);
   cartQuantity.textContent = quantity;
-};
-
-const addToCart = (currentProduct) => {
-  cart.push({
-    productId: currentProduct.productId,
-    productName: currentProduct.productName,
-    quantity: currentProduct.quantity,
-    productPriceInCent: currentProduct.productPriceInCent,
-  });
-};
-
-function addTextEffectWhenItemIsAdded(button) {
-  const productContainer = button.closest(".product-container");
-  const addedToCartMessage = productContainer.querySelector(".added-to-cart");
-
-  // Set initial opacity
-  addedToCartMessage.style.opacity = 1;
-
-  setTimeout(() => {
-    addedToCartMessage.style.opacity = 0;
-  }, 1500);
 }
