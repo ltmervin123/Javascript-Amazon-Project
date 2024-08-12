@@ -15,9 +15,6 @@ body {
 /* Header Styles */
 
 .logoContainer {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
   margin: auto;
 }
 
@@ -34,8 +31,6 @@ header {
 
 main {
   display: flex;
-  /* justify-content: center;
-  align-items: center; */
   flex-direction: column;
   margin-top: 10px;
 }
@@ -53,14 +48,7 @@ button {
   margin: auto;
 }
 
-/* .logInFormContainer > img {
-  width: 20px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-} */
+
 
 .signInLabel {
   font-size: 28px;
@@ -75,7 +63,8 @@ button {
 }
 
 input {
-  margin-bottom: 14px;
+  /* Add a margin button of 14 px */
+  margin-bottom: 14px; 
   width: 100%;
   height: 31px;
   padding: 3px 7px;
@@ -94,7 +83,6 @@ input {
   border-radius: 8px;
   font-family: "Amazon Ember Regular";
   font-size: 13px;
-  /* cursor: pointer; */
 }
 
 .conditionLabel {
@@ -113,7 +101,7 @@ input {
 
 .passwordContainer input[type="password"] {
   width: 100%;
-  padding-right: 30px; /* Make space for the icon */
+  padding-right: 30px; 
 }
 
 .passwordContainer img {

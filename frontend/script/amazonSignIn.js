@@ -27,7 +27,7 @@ const validateUser = () => {
 
   if (input.email && input.password) {
     if (input.email === "user" && input.password === "password") {
-      window.location.href = "amazon.html";
+      window.location.href = "frontend/html/amazon.html";
     } else {
       displayWarning();
     }
@@ -53,7 +53,10 @@ document
     passwordInput.setAttribute("type", type);
 
     // Change the icon (optional)
-    this.src = type === "password" ? "../images/eye.png" : "../images/hidden.png";
+    this.src =
+      type === "password"
+        ? "frontend/images/eye.png"
+        : "frontend/images/hidden.png";
   });
 
 displayWarning();
@@ -68,7 +71,7 @@ document.getElementById("inputPassword").addEventListener("input", checkInputs);
 function checkInputs() {
   const email = document.getElementById("inputEmail").value;
   const password = document.getElementById("inputPassword").value;
-  const continueButton = document.querySelector('.continueButton');
+  const continueButton = document.querySelector(".continueButton");
 
   if (email && password) {
     continueButton.disabled = false;
