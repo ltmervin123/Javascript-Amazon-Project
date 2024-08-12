@@ -15,7 +15,17 @@ export const addToCart = (currentProduct) => {
   saveCart();
 };
 
-
+export function deleteProductToTheCart(id) {
+  const index = cart.findIndex((product) => product.productId === id);
+  if (index !== -1) {
+    cart.splice(index, 1); // Remove the item from the cart
+    console.log(`Item with id ${id} has been removed.`);
+    saveCart(); // Save the updated cart to the localstorage
+  } else {
+    console.log(`Item with id ${id} not found.`);
+  }
+  console.log(cart);
+}
 
 export function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));

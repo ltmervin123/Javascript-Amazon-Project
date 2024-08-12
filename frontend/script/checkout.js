@@ -1,15 +1,16 @@
 import { cart } from "./cart.js";
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
-import { saveCart } from "./cart.js";
+import { deleteProductToTheCart } from "./cart.js";
 
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
 const checkOutHeaderSection = document.querySelector(
   ".js-checkout-header-middle-section"
 );
-// const deleteQuantity = document.querySelectorAll(".js-delete-quantity-link");
+// const deliveryOptionInput = document.querySelectorAll(".delivery-option-input");
 let orderSummaryHtml = "";
+let shippingCost = 0;
 
 function generateOrderSummary() {
   orderSummaryHtml = "";
@@ -56,7 +57,7 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio" checked
                 class="delivery-option-input"
-                name="delivery-option-${matchingProduct.productId}">
+                name="delivery-option-${matchingProduct.id}" value="0">
               <div>
                 <div class="delivery-option-date">
                   Tuesday, June 21
@@ -69,7 +70,7 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-${matchingProduct.productId}">
+                name="delivery-option-${matchingProduct.id}" value="4.99">
               <div>
                 <div class="delivery-option-date">
                   Wednesday, June 15
@@ -81,8 +82,8 @@ function generateOrderSummary() {
             </div>
             <div class="delivery-option">
               <input type="radio"
-                class="delivery-option-input"
-                name="delivery-option-${matchingProduct.productId}">
+                class="delivery-option-input"  
+                name="delivery-option-${matchingProduct.id}" value="9.99">
               <div>
                 <div class="delivery-option-date">
                   Monday, June 13
@@ -99,11 +100,20 @@ function generateOrderSummary() {
   orderSummaryContainer.innerHTML = orderSummaryHtml;
   document.querySelector(".order-summary").innerHTML = orderSummaryHtml;
 
-  // Delete product in the cart by Id
+  // Evenlistener for Delete product in the cart by Id
   document.querySelectorAll(".js-delete-quantity-link").forEach((button) => {
     button.addEventListener("click", () => {
       const productId = button.getAttribute("data-product-id");
       deleteProductToTheCart(productId);
+      loadPage(); // Re-render the UI to reflect the changes
+    });
+  });
+
+  //Eventlistener to determine the shipping cost
+  document.querySelectorAll(".delivery-option-input").forEach((radio) => {
+    radio.addEventListener("change", (event) => {
+      const selectedValue = parseFloat(event.target.value);
+      calculateShippingCost(selectedValue);
     });
   });
 }
@@ -131,8 +141,8 @@ function generatePaymentSummary() {
 </div>
 
 <div class="payment-summary-row">
-  <div>Items (3):</div>
-  <div class="payment-summary-money">$42.75</div>
+  <div>Items (${getTotalItem()}):</div>
+  <div class="payment-summary-money">$${calculateTotaCost()}</div>
 </div>
 
 <div class="payment-summary-row">
@@ -160,17 +170,17 @@ function generatePaymentSummary() {
 </button>`;
 }
 
-function deleteProductToTheCart(id) {
-  const index = cart.findIndex((product) => product.productId === id);
-  if (index !== -1) {
-    cart.splice(index, 1); // Remove the item from the cart
-    console.log(`Item with id ${id} has been removed.`);
-    saveCart(); // Save the updated cart to the localstorage
-    loadPage(); // Re-render the UI to reflect the changes
-  } else {
-    console.log(`Item with id ${id} not found.`);
-  }
-  console.log(cart);
+function calculateTotaCost() {
+  let totaCost = 0;
+  cart.forEach((item) => {
+    const matchingProduct = findProductInfoById(item.productId);
+    totaCost += matchingProduct.priceCents * item.quantity;
+  });
+  return (totaCost / 100).toFixed(2);
+}
+
+function getTotalItem() {
+  return cart.length;
 }
 
 function loadPage() {
@@ -178,5 +188,7 @@ function loadPage() {
   generateCheckOutItem();
   generatePaymentSummary();
 }
+
+function calculateShippingCost(shippingCost) {}
 
 loadPage(); //Load the pages

@@ -80,14 +80,8 @@ addToCartButton.forEach((button) => {
         .closest(".product-container")
         .querySelector(".product-quantity").value,
     };
-
-    const matchingItem = findProductInCart(currentProduct.productId);
-    if (matchingItem) {
-      matchingItem.quantity =
-        parseInt(currentProduct.quantity) + parseInt(matchingItem.quantity);
-    } else {
-      addToCart(currentProduct);
-    }
+    
+    addToCart(currentProduct);
     updateCartQuantity();
     addTextEffectWhenItemIsAdded(button);
   });
