@@ -1,20 +1,21 @@
 import { cart } from "./cart.js";
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
-
+import { saveCart } from "./cart.js";
 
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
 const checkOutHeaderSection = document.querySelector(
   ".js-checkout-header-middle-section"
 );
+// const deleteQuantity = document.querySelectorAll(".js-delete-quantity-link");
 let orderSummaryHtml = "";
 
 function generateOrderSummary() {
+  orderSummaryHtml = "";
+  orderSummaryContainer.innerHTML = "";
   cart.forEach((product) => {
     let matchingProduct = findProductInfoById(product.productId);
-    console.log(matchingProduct);
-
     orderSummaryHtml += `<div class="cart-item-container">
         <div class="delivery-date">
           Delivery date: Tuesday, June 21
@@ -33,12 +34,16 @@ function generateOrderSummary() {
             </div>
             <div class="product-quantity">
               <span>
-                Quantity: <span class="quantity-label">${product.quantity}</span>
+                Quantity: <span class="quantity-label">${
+                  product.quantity
+                }</span>
               </span>
               <span class="update-quantity-link link-primary">
                 Update
               </span>
-              <span class="delete-quantity-link link-primary">
+              <span class="delete-quantity-link link-primary js-delete-quantity-link link-primary" data-product-id="${
+                matchingProduct.id
+              }">
                 Delete
               </span>
             </div>
@@ -93,6 +98,14 @@ function generateOrderSummary() {
   });
   orderSummaryContainer.innerHTML = orderSummaryHtml;
   document.querySelector(".order-summary").innerHTML = orderSummaryHtml;
+
+  // Delete product in the cart by Id
+  document.querySelectorAll(".js-delete-quantity-link").forEach((button) => {
+    button.addEventListener("click", () => {
+      const productId = button.getAttribute("data-product-id");
+      deleteProductToTheCart(productId);
+    });
+  });
 }
 
 function generateCheckOutItem() {
@@ -147,7 +160,23 @@ function generatePaymentSummary() {
 </button>`;
 }
 
-generateOrderSummary();
-generateCheckOutItem();
-generatePaymentSummary();
+function deleteProductToTheCart(id) {
+  const index = cart.findIndex((product) => product.productId === id);
+  if (index !== -1) {
+    cart.splice(index, 1); // Remove the item from the cart
+    console.log(`Item with id ${id} has been removed.`);
+    saveCart(); // Save the updated cart to the localstorage
+    loadPage(); // Re-render the UI to reflect the changes
+  } else {
+    console.log(`Item with id ${id} not found.`);
+  }
+  console.log(cart);
+}
 
+function loadPage() {
+  generateOrderSummary();
+  generateCheckOutItem();
+  generatePaymentSummary();
+}
+
+loadPage(); //Load the pages

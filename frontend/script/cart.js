@@ -15,18 +15,8 @@ export const addToCart = (currentProduct) => {
   saveCart();
 };
 
-export function addTextEffectWhenItemIsAdded(button) {
-  const productContainer = button.closest(".product-container");
-  const addedToCartMessage = productContainer.querySelector(".added-to-cart");
 
-  // Set initial opacity
-  addedToCartMessage.style.opacity = 1;
 
-  setTimeout(() => {
-    addedToCartMessage.style.opacity = 0;
-  }, 1500);
-}
-
-function saveCart() {
+export function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }

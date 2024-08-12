@@ -1,10 +1,5 @@
 import { products } from "../../data/products.js";
-import {
-  cart,
-  findProductInCart,
-  addToCart,
-  addTextEffectWhenItemIsAdded,
-} from "./cart.js";
+import { cart, findProductInCart, addToCart } from "./cart.js";
 import { currencyFormatter } from "../script/utils/money.js";
 
 const productGrid = document.querySelector(".products-grid");
@@ -101,4 +96,16 @@ addToCartButton.forEach((button) => {
 function updateCartQuantity() {
   const quantity = cart.length;
   cartQuantity.textContent = quantity;
+}
+
+function addTextEffectWhenItemIsAdded(button) {
+  const productContainer = button.closest(".product-container");
+  const addedToCartMessage = productContainer.querySelector(".added-to-cart");
+
+  // Set initial opacity
+  addedToCartMessage.style.opacity = 1;
+
+  setTimeout(() => {
+    addedToCartMessage.style.opacity = 0;
+  }, 1500);
 }
