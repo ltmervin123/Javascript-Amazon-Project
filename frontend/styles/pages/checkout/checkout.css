@@ -209,3 +209,34 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.quantity-input {
+  width: 30px;
+  height: 19px;
+  outline: none;
+  display: none;
+  font-size: 16px;
+}
+
+.show-input {
+  display: inline;
+}
+
+.save-quantity-link{
+  display: none;
+}
+
+.show-input-save-quality-link{
+  display: inline;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the spinner for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

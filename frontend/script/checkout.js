@@ -1,7 +1,7 @@
-import { cart } from "./cart.js";
+import { cart, deleteProductToTheCart, saveCart } from "./cart.js";
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
-import { deleteProductToTheCart } from "./cart.js";
+import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
@@ -39,9 +39,15 @@ function generateOrderSummary() {
                   product.quantity
                 }</span>
               </span>
-              <span class="update-quantity-link link-primary">
+              <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id="${
+                matchingProduct.id
+              }">
                 Update
               </span>
+             <input type="number" class="quantity-input js-quantity-input">
+             <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id="${
+               matchingProduct.id
+             }">Save</span>
               <span class="delete-quantity-link link-primary js-delete-quantity-link link-primary" data-product-id="${
                 matchingProduct.id
               }">
@@ -100,7 +106,51 @@ function generateOrderSummary() {
   orderSummaryContainer.innerHTML = orderSummaryHtml;
   document.querySelector(".order-summary").innerHTML = orderSummaryHtml;
 
-  // Evenlistener for Delete product in the cart by Id
+  //Eventlistener to update product in the cart by id
+  document.querySelectorAll(".js-update-quantity-link").forEach((update) => {
+    update.addEventListener("click", () => {
+      const inputField = update.nextElementSibling;
+      const saveQuantityLink = inputField.nextElementSibling;
+
+      if (
+        inputField &&
+        inputField.classList.contains("quantity-input") &&
+        saveQuantityLink &&
+        saveQuantityLink.classList.contains("save-quantity-link")
+      ) {
+        // Toggle the 'show-input' class to show/hide the input field
+        update.style.display = "none";
+        inputField.classList.toggle("show-input");
+        saveQuantityLink.classList.toggle("show-input-save-quality-link");
+      }
+    });
+  });
+
+  //Eventlistener to save product
+  document.querySelectorAll(".js-save-quantity-link").forEach((save) => {
+    save.addEventListener("click", () => {
+      const inputField = save.previousElementSibling;
+      const updateLink = save.previousElementSibling.previousElementSibling;
+      const productId = save.getAttribute("data-product-id");
+
+      if (
+        inputField &&
+        inputField.classList.contains("quantity-input") &&
+        updateLink &&
+        updateLink.classList.contains("js-update-quantity-link")
+      ) {
+        updateQuantity(productId); // call to update the product quantity
+        // Hide the input field and 'Save' link
+        inputField.classList.remove("show-input");
+        save.classList.remove("show-input-save-quality-link");
+
+        // Show the 'Update' link
+        updateLink.style.display = "inline";
+      }
+    });
+  });
+
+  // Eventlistener to delete product in the cart by Id
   document.querySelectorAll(".js-delete-quantity-link").forEach((button) => {
     button.addEventListener("click", () => {
       const productId = button.getAttribute("data-product-id");
@@ -116,6 +166,14 @@ function generateOrderSummary() {
       calculateShippingCost(selectedValue);
     });
   });
+}
+
+function updateQuantity(productId) {
+  const inputFieldValue = parseInt(
+    document.querySelector(".js-quantity-input").value
+  );
+
+  
 }
 
 function generateCheckOutItem() {
@@ -189,6 +247,13 @@ function loadPage() {
   generatePaymentSummary();
 }
 
-function calculateShippingCost(shippingCost) {}
+function determineDeliveryDates(numberOfDaysShip) {
+  const currentDate = dayjs();
+  return currentDate.add(numberOfDaysShip, "day");
+}
+
+function formatDates(dates) {
+  return dates.format("dddd, MMMM D");
+}
 
 loadPage(); //Load the pages

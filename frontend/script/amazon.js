@@ -76,11 +76,13 @@ addToCartButton.forEach((button) => {
       productId: button.getAttribute("data-product-id"),
       productName: button.getAttribute("data-product-name"),
       productPriceInCent: button.getAttribute("data-product-price-cent"),
-      quantity: event.target
-        .closest(".product-container")
-        .querySelector(".product-quantity").value,
+      quantity: parseInt(
+        event.target
+          .closest(".product-container")
+          .querySelector(".product-quantity").value
+      ),
     };
-    
+
     addToCart(currentProduct);
     updateCartQuantity();
     addTextEffectWhenItemIsAdded(button);
@@ -88,7 +90,10 @@ addToCartButton.forEach((button) => {
 });
 
 function updateCartQuantity() {
-  const quantity = cart.length;
+  let quantity = 0;
+  cart.forEach((product) => {
+    quantity += product.quantity;
+  });
   cartQuantity.textContent = quantity;
 }
 

@@ -6,12 +6,18 @@ export const findProductInCart = (productId) => {
 };
 
 export const addToCart = (currentProduct) => {
-  cart.push({
-    productId: currentProduct.productId,
-    //productName: currentProduct.productName,
-    quantity: currentProduct.quantity,
-    //productPriceInCent: currentProduct.productPriceInCent,
-  });
+  let matchingProduct = findProductInCart(currentProduct.productId);
+
+  if (matchingProduct) {
+    matchingProduct.quantity += currentProduct.quantity;
+  } else {
+    cart.push({
+      productId: currentProduct.productId,
+      //productName: currentProduct.productName,
+      quantity: currentProduct.quantity,
+      //productPriceInCent: currentProduct.productPriceInCent,
+    });
+  }
   saveCart();
 };
 
