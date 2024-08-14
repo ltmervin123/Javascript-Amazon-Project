@@ -15,6 +15,7 @@ export const addToCart = (currentProduct) => {
       productId: currentProduct.productId,
       //productName: currentProduct.productName,
       quantity: currentProduct.quantity,
+      shippingId: "1"
       //productPriceInCent: currentProduct.productPriceInCent,
     });
   }

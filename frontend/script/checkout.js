@@ -166,7 +166,7 @@ function generateOrderSummary() {
   document.querySelectorAll(".delivery-option-input").forEach((radio) => {
     radio.addEventListener("change", (event) => {
       const selectedValue = parseFloat(event.target.value);
-      calculateShippingCost(selectedValue);
+      // calculateShippingCost(selectedValue);
     });
   });
 }
