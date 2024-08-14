@@ -33,6 +33,12 @@ export function deleteProductToTheCart(id) {
   console.log(cart);
 }
 
+export function updateQuantity(productId, newQuantity) {
+  const matchingProduct = findProductInCart(productId);
+  matchingProduct.quantity = newQuantity;
+  saveCart();
+}
+
 export function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }

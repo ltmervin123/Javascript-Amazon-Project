@@ -1,4 +1,5 @@
-import { cart, deleteProductToTheCart, saveCart } from "./cart.js";
+import { cart, deleteProductToTheCart, updateQuantity } from "./cart.js";
+
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
@@ -66,7 +67,7 @@ function generateOrderSummary() {
                 name="delivery-option-${matchingProduct.id}" value="0">
               <div>
                 <div class="delivery-option-date">
-                  Tuesday, June 21
+                  ${determineShippingDays(7)}
                 </div>
                 <div class="delivery-option-price">
                   FREE Shipping
@@ -79,7 +80,7 @@ function generateOrderSummary() {
                 name="delivery-option-${matchingProduct.id}" value="4.99">
               <div>
                 <div class="delivery-option-date">
-                  Wednesday, June 15
+                ${determineShippingDays(4)}
                 </div>
                 <div class="delivery-option-price">
                   $4.99 - Shipping
@@ -92,7 +93,7 @@ function generateOrderSummary() {
                 name="delivery-option-${matchingProduct.id}" value="9.99">
               <div>
                 <div class="delivery-option-date">
-                  Monday, June 13
+                ${determineShippingDays(1)}
                 </div>
                 <div class="delivery-option-price">
                   $9.99 - Shipping
@@ -132,6 +133,7 @@ function generateOrderSummary() {
       const inputField = save.previousElementSibling;
       const updateLink = save.previousElementSibling.previousElementSibling;
       const productId = save.getAttribute("data-product-id");
+      const inputFieldValue = parseInt(inputField.value, 10);
 
       if (
         inputField &&
@@ -139,7 +141,8 @@ function generateOrderSummary() {
         updateLink &&
         updateLink.classList.contains("js-update-quantity-link")
       ) {
-        updateQuantity(productId); // call to update the product quantity
+        updateQuantity(productId, inputFieldValue); // call to update the product quantity
+        loadPage(); // Re-render the UI to reflect the changes
         // Hide the input field and 'Save' link
         inputField.classList.remove("show-input");
         save.classList.remove("show-input-save-quality-link");
@@ -168,16 +171,8 @@ function generateOrderSummary() {
   });
 }
 
-function updateQuantity(productId) {
-  const inputFieldValue = parseInt(
-    document.querySelector(".js-quantity-input").value
-  );
-
-  
-}
-
 function generateCheckOutItem() {
-  let totalCheckOut = cart.length;
+  let totalCheckOut = getTotalItem();
   let checkOutHeaderSectionHtml = "";
 
   if (totalCheckOut > 1) {
@@ -238,7 +233,12 @@ function calculateTotaCost() {
 }
 
 function getTotalItem() {
-  return cart.length;
+  let quantity = 0;
+  cart.forEach((product) => {
+    quantity += product.quantity;
+  });
+
+  return quantity;
 }
 
 function loadPage() {
@@ -247,13 +247,18 @@ function loadPage() {
   generatePaymentSummary();
 }
 
-function determineDeliveryDates(numberOfDaysShip) {
+function determineDeliveryDates(shippingDays ) {
   const currentDate = dayjs();
-  return currentDate.add(numberOfDaysShip, "day");
+  return currentDate.add(shippingDays, "day");
 }
 
 function formatDates(dates) {
   return dates.format("dddd, MMMM D");
+}
+
+function determineShippingDays(shippingDays ) {
+  const deliveryDates = determineDeliveryDates(shippingDays );
+  return formatDates(deliveryDates);
 }
 
 loadPage(); //Load the pages
