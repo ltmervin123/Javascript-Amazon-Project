@@ -1,9 +1,11 @@
 import { cart, deleteProductToTheCart, updateQuantity } from "./cart.js";
-
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
-import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-
+import {
+  determineShippingDays,
+  addShippingId,
+  getDeliveryDates,
+} from "./deliveryOptions.js";
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
 const checkOutHeaderSection = document.querySelector(
@@ -11,7 +13,6 @@ const checkOutHeaderSection = document.querySelector(
 );
 // const deliveryOptionInput = document.querySelectorAll(".delivery-option-input");
 let orderSummaryHtml = "";
-let shippingCost = 0;
 
 function generateOrderSummary() {
   orderSummaryHtml = "";
@@ -19,8 +20,8 @@ function generateOrderSummary() {
   cart.forEach((product) => {
     let matchingProduct = findProductInfoById(product.productId);
     orderSummaryHtml += `<div class="cart-item-container">
-        <div class="delivery-date">
-          Delivery date: Tuesday, June 21
+        <div class="delivery-date" data-product-id="${matchingProduct.id}">
+          Delivery date: ${getDeliveryDates(matchingProduct.id)}
         </div>
 
         <div class="cart-item-details-grid">
@@ -62,9 +63,13 @@ function generateOrderSummary() {
               Choose a delivery option:
             </div>
             <div class="delivery-option">
-              <input type="radio" checked
+              <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-${matchingProduct.id}" value="0">
+                name="delivery-option-${
+                  matchingProduct.id
+                }" value="0" data-shipping-id="1" data-product-id="${
+      matchingProduct.id
+    }">
               <div>
                 <div class="delivery-option-date">
                   ${determineShippingDays(7)}
@@ -74,10 +79,16 @@ function generateOrderSummary() {
                 </div>
               </div>
             </div>
+            
+
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"
-                name="delivery-option-${matchingProduct.id}" value="4.99">
+                name="delivery-option-${
+                  matchingProduct.id
+                }" value="4.99" data-shipping-id="2" data-product-id="${
+      matchingProduct.id
+    }">
               <div>
                 <div class="delivery-option-date">
                 ${determineShippingDays(4)}
@@ -90,7 +101,11 @@ function generateOrderSummary() {
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"  
-                name="delivery-option-${matchingProduct.id}" value="9.99">
+                name="delivery-option-${
+                  matchingProduct.id
+                }" value="9.99" data-shipping-id="3" data-product-id="${
+      matchingProduct.id
+    }">
               <div>
                 <div class="delivery-option-date">
                 ${determineShippingDays(1)}
@@ -165,10 +180,16 @@ function generateOrderSummary() {
   //Eventlistener to determine the shipping cost
   document.querySelectorAll(".delivery-option-input").forEach((radio) => {
     radio.addEventListener("change", (event) => {
-      const selectedValue = parseFloat(event.target.value);
-      // calculateShippingCost(selectedValue);
+      const shippingId = radio.getAttribute("data-shipping-id");
+      const productId = radio.getAttribute("data-product-id");
+      addShippingOption(productId, shippingId);
+      reloadDeliveryDates(productId);
     });
   });
+}
+
+function addShippingOption(productId, shippingId) {
+  addShippingId(productId, shippingId);
 }
 
 function generateCheckOutItem() {
@@ -247,18 +268,11 @@ function loadPage() {
   generatePaymentSummary();
 }
 
-function determineDeliveryDates(shippingDays ) {
-  const currentDate = dayjs();
-  return currentDate.add(shippingDays, "day");
-}
-
-function formatDates(dates) {
-  return dates.format("dddd, MMMM D");
-}
-
-function determineShippingDays(shippingDays ) {
-  const deliveryDates = determineDeliveryDates(shippingDays );
-  return formatDates(deliveryDates);
+function reloadDeliveryDates(productId) {
+  document.querySelector(
+    `.delivery-date[data-product-id="${productId}"]`
+  ).innerHTML = `Delivery date: ${getDeliveryDates(productId)}`;
+  console.log(cart);
 }
 
 loadPage(); //Load the pages
