@@ -1,11 +1,18 @@
-import { cart, deleteProductToTheCart, updateQuantity } from "./cart.js";
+import {
+  cart,
+  deleteProductToTheCart,
+  updateQuantity,
+  findProductInCart,
+} from "./cart.js";
 import { findProductInfoById } from "../../data/products.js";
 import { currencyFormatter } from "./utils/money.js";
 import {
   determineShippingDays,
   addShippingId,
   getDeliveryDates,
+  deliveryOptions,
 } from "./deliveryOptions.js";
+
 const orderSummaryContainer = document.querySelector(".order-summary");
 const paymentSummaryContainer = document.querySelector(".payment-summary");
 const checkOutHeaderSection = document.querySelector(
@@ -69,7 +76,7 @@ function generateOrderSummary() {
                   matchingProduct.id
                 }" value="0" data-shipping-id="1" data-product-id="${
       matchingProduct.id
-    }">
+    }" ${isChecked("1", matchingProduct.id) ? "checked" : ""}>
               <div>
                 <div class="delivery-option-date">
                   ${determineShippingDays(7)}
@@ -88,7 +95,7 @@ function generateOrderSummary() {
                   matchingProduct.id
                 }" value="4.99" data-shipping-id="2" data-product-id="${
       matchingProduct.id
-    }">
+    }" ${isChecked("2", matchingProduct.id) ? "checked" : ""}>
               <div>
                 <div class="delivery-option-date">
                 ${determineShippingDays(4)}
@@ -98,6 +105,7 @@ function generateOrderSummary() {
                 </div>
               </div>
             </div>
+
             <div class="delivery-option">
               <input type="radio"
                 class="delivery-option-input"  
@@ -105,7 +113,7 @@ function generateOrderSummary() {
                   matchingProduct.id
                 }" value="9.99" data-shipping-id="3" data-product-id="${
       matchingProduct.id
-    }">
+    }" ${isChecked("3", matchingProduct.id) ? "checked" : ""}>
               <div>
                 <div class="delivery-option-date">
                 ${determineShippingDays(1)}
@@ -115,6 +123,7 @@ function generateOrderSummary() {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>`;
@@ -184,8 +193,14 @@ function generateOrderSummary() {
       const productId = radio.getAttribute("data-product-id");
       addShippingOption(productId, shippingId);
       reloadDeliveryDates(productId);
+      loadShippingAndHandling();
     });
   });
+}
+
+function isChecked(deliveryId, productId) {
+  const matchingProduct = findProductInCart(productId);
+  return matchingProduct.shippingId === deliveryId;
 }
 
 function addShippingOption(productId, shippingId) {
@@ -221,7 +236,7 @@ function generatePaymentSummary() {
 
 <div class="payment-summary-row">
   <div>Shipping &amp; handling:</div>
-  <div class="payment-summary-money">$4.99</div>
+  <div class="payment-summary-money js-payment-summary-money">$${calculateTotalShippingCost()}</div>
 </div>
 
 <div class="payment-summary-row subtotal-row">
@@ -273,6 +288,25 @@ function reloadDeliveryDates(productId) {
     `.delivery-date[data-product-id="${productId}"]`
   ).innerHTML = `Delivery date: ${getDeliveryDates(productId)}`;
   console.log(cart);
+}
+
+function loadShippingAndHandling() {
+  document.querySelector(
+    ".js-payment-summary-money"
+  ).innerHTML = `$${calculateTotalShippingCost()}`;
+}
+
+function calculateTotalShippingCost() {
+  let totalCost = 0;
+
+  cart.forEach((product) => {
+    deliveryOptions.forEach((option) => {
+      if (product.shippingId === option.id) {
+        totalCost += option.shippingCostCent;
+      }
+    });
+  });
+  return currencyFormatter(totalCost);
 }
 
 loadPage(); //Load the pages
