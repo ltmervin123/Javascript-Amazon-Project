@@ -166,6 +166,7 @@ function generateOrderSummary() {
         updateLink.classList.contains("js-update-quantity-link")
       ) {
         updateQuantity(productId, inputFieldValue); // call to update the product quantity
+        loadPaymentSummary();
         loadPage(); // Re-render the UI to reflect the changes
         // Hide the input field and 'Save' link
         inputField.classList.remove("show-input");
@@ -182,6 +183,7 @@ function generateOrderSummary() {
     button.addEventListener("click", () => {
       const productId = button.getAttribute("data-product-id");
       deleteProductToTheCart(productId);
+      loadPaymentSummary();
       loadPage(); // Re-render the UI to reflect the changes
     });
   });
@@ -193,7 +195,7 @@ function generateOrderSummary() {
       const productId = radio.getAttribute("data-product-id");
       addShippingOption(productId, shippingId);
       reloadDeliveryDates(productId);
-      loadShippingAndHandling();
+      loadPaymentSummary();
     });
   });
 }
@@ -231,27 +233,27 @@ function generatePaymentSummary() {
 
 <div class="payment-summary-row">
   <div>Items (${getTotalItem()}):</div>
-  <div class="payment-summary-money">$${calculateTotaCost()}</div>
+  <div class="payment-summary-money">$${calculateTotalItemCost()}</div>
 </div>
 
 <div class="payment-summary-row">
   <div>Shipping &amp; handling:</div>
-  <div class="payment-summary-money js-payment-summary-money">$${calculateTotalShippingCost()}</div>
+  <div class="payment-summary-money js-shipping-payment-summary-money">$${calculateTotalShippingCost()}</div>
 </div>
 
 <div class="payment-summary-row subtotal-row">
   <div>Total before tax:</div>
-  <div class="payment-summary-money">$47.74</div>
+  <div class="payment-summary-money js-toal-before-tax">$${calculateTotalCostBeforeTax()}</div>
 </div>
 
 <div class="payment-summary-row">
   <div>Estimated tax (10%):</div>
-  <div class="payment-summary-money">$4.77</div>
+  <div class="payment-summary-money js-tax-summary">$${calculateTax()}</div>
 </div>
 
 <div class="payment-summary-row total-row">
   <div>Order total:</div>
-  <div class="payment-summary-money">$52.51</div>
+  <div class="payment-summary-money js-total-payment">$${calculateTotaCost()}</div>
 </div>
 
 <button class="place-order-button button-primary">
@@ -259,7 +261,7 @@ function generatePaymentSummary() {
 </button>`;
 }
 
-function calculateTotaCost() {
+function calculateTotalItemCost() {
   let totaCost = 0;
   cart.forEach((item) => {
     const matchingProduct = findProductInfoById(item.productId);
@@ -292,8 +294,25 @@ function reloadDeliveryDates(productId) {
 
 function loadShippingAndHandling() {
   document.querySelector(
-    ".js-payment-summary-money"
+    ".js-shipping-payment-summary-money"
   ).innerHTML = `$${calculateTotalShippingCost()}`;
+}
+
+function loadTotalBeforeTaxSummary() {
+  document.querySelector(
+    ".js-toal-before-tax"
+  ).innerHTML = `$${calculateTotalCostBeforeTax()}`;
+}
+
+function loadTaxAmountSummary() {
+  document.querySelector(".js-tax-summary").innerHTML = `$${calculateTax()}`;
+}
+
+function calculateTotalCostBeforeTax() {
+  const totalShippingCost = parseInt(calculateTotalShippingCost() * 100);
+  const totalItemCost = parseInt(calculateTotalItemCost() * 100);
+  const totalBeforeTax = totalShippingCost + totalItemCost;
+  return currencyFormatter(totalBeforeTax);
 }
 
 function calculateTotalShippingCost() {
@@ -307,6 +326,33 @@ function calculateTotalShippingCost() {
     });
   });
   return currencyFormatter(totalCost);
+}
+
+function calculateTotaCost() {
+  const taxAmount = parseInt(calculateTax() * 100);
+  const totolCostBeforeTax = parseInt(calculateTotalCostBeforeTax() * 100);
+  const total = taxAmount + totolCostBeforeTax;
+  return currencyFormatter(total);
+}
+
+function loadTotalCost() {
+  document.querySelector(
+    ".js-total-payment"
+  ).innerHTML = `$${calculateTotaCost()}`;
+}
+
+function calculateTax() {
+  const tax = 10;
+  const totalCostBeforeTax = parseInt(calculateTotalCostBeforeTax() * 100);
+  const taxAmount = (totalCostBeforeTax * tax) / 100;
+  return currencyFormatter(taxAmount);
+}
+
+function loadPaymentSummary() {
+  loadTotalCost();
+  loadTotalBeforeTaxSummary();
+  loadTaxAmountSummary();
+  loadShippingAndHandling();
 }
 
 loadPage(); //Load the pages
