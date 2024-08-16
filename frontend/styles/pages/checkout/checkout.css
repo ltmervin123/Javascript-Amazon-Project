@@ -55,6 +55,7 @@
 
 .payment-summary {
   padding-bottom: 5px;
+
 }
 
 @media (max-width: 1000px) {
@@ -63,6 +64,7 @@
       1 in the grid. (Normally, the row that an element is
       placed in is determined by the order of the elements in
       the HTML. grid-row overrides this default ordering). */
+    position: none;
     grid-row: 1;
     margin-bottom: 12px;
   }
@@ -222,11 +224,11 @@
   display: inline;
 }
 
-.save-quantity-link{
+.save-quantity-link {
   display: none;
 }
 
-.show-input-save-quality-link{
+.show-input-save-quality-link {
   display: inline;
 }
 
