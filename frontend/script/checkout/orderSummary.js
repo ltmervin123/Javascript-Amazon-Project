@@ -68,6 +68,7 @@ export function generateOrderSummary() {
                   Delete
                 </span>
               </div>
+              <div class="quantity-validation-pop-up js-quantity-validation-pop-up">Invalid Quantity, quantity must be > 0 </div>
             </div>
   
             <div class="delivery-options">
@@ -170,15 +171,19 @@ export function generateOrderSummary() {
         updateLink &&
         updateLink.classList.contains("js-update-quantity-link")
       ) {
-        updateQuantity(productId, inputFieldValue); // call to update the product quantity
-        loadPaymentSummary();
-        loadPage(); // Re-render the UI to reflect the changes
-        // Hide the input field and 'Save' link
-        inputField.classList.remove("show-input");
-        save.classList.remove("show-input-save-quality-link");
-
-        // Show the 'Update' link
-        updateLink.style.display = "inline";
+        //Handle quantity input
+        if (validateQuantityInput(inputFieldValue)) {
+          updateQuantity(productId, inputFieldValue); // call to update the product quantity
+          loadPaymentSummary();
+          loadPage(); // Re-render the UI to reflect the changes
+          // Hide the input field and 'Save' link
+          inputField.classList.remove("show-input");
+          save.classList.remove("show-input-save-quality-link");
+          // Show the 'Update' link
+          updateLink.style.display = "inline";
+        } else {
+          displayWarning(save);
+        }
       }
     });
   });
@@ -219,6 +224,22 @@ export function generateCheckOutItem() {
   }
 
   checkOutHeaderSection.innerHTML = checkOutHeaderSectionHtml;
+}
+
+function displayWarning(save) {
+  const productContainer = save.closest(".cart-item-container");
+  const popUpWarning = productContainer.querySelector(
+    ".js-quantity-validation-pop-up"
+  );
+
+  popUpWarning.style.opacity = 1;
+  setTimeout(() => {
+    popUpWarning.style.opacity = 0;
+  }, 2000);
+}
+
+function validateQuantityInput(quantity) {
+  return quantity > 0;
 }
 
 function isChecked(deliveryId, productId) {
