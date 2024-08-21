@@ -1,4 +1,4 @@
-import { currencyFormatter } from "../../script/utils/money.js";
+import { currencyFormatter } from "../../../script/utils/money.js";
 
 describe("Test suite : Currency formatter", () => {
   it("Convert cent into dollar", () => {
