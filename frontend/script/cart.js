@@ -1,5 +1,10 @@
-// import { cartQuantity } from "./amazon.js";
-export let cart = JSON.parse(localStorage.getItem("cart")) || [];
+export let cart;
+
+loadCartFromLocalStorage();
+
+export function loadCartFromLocalStorage() {
+  cart = JSON.parse(localStorage.getItem("cart")) || [];
+}
 
 export const findProductInCart = (productId) => {
   return cart.find((product) => product.productId === productId);
@@ -15,7 +20,7 @@ export const addToCart = (currentProduct) => {
       productId: currentProduct.productId,
       //productName: currentProduct.productName,
       quantity: currentProduct.quantity,
-      shippingId: "1"
+      shippingId: "1",
       //productPriceInCent: currentProduct.productPriceInCent,
     });
   }
@@ -42,4 +47,3 @@ export function updateQuantity(productId, newQuantity) {
 export function saveCart() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-
