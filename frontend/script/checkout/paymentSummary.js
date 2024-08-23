@@ -1,4 +1,5 @@
-import { cart } from "../cart.js";
+
+import { Cart } from "../cart-class.js";
 import { currencyFormatter } from "../utils/money.js";
 import { findProductInfoById } from "../../../data/products.js";
 import { deliveryOptions } from "../deliveryOptions.js";
@@ -41,17 +42,18 @@ export function generatePaymentSummary() {
 }
 
 export function getTotalItem() {
+  const cart = new Cart("normal-cart");
   let quantity = 0;
-  cart.forEach((product) => {
+  cart.cartItem.forEach((product) => {
     quantity += product.quantity;
   });
-
   return quantity;
 }
 
 export function calculateTotalItemCost() {
+  const cart = new Cart("normal-cart");
   let totaCost = 0;
-  cart.forEach((item) => {
+  cart.cartItem.forEach((item) => {
     const matchingProduct = findProductInfoById(item.productId);
     totaCost += matchingProduct.priceCents * item.quantity;
   });
@@ -60,8 +62,8 @@ export function calculateTotalItemCost() {
 
 export function calculateTotalShippingCost() {
   let totalCost = 0;
-
-  cart.forEach((product) => {
+  const cart = new Cart("normal-cart");
+  cart.cartItem.forEach((product) => {
     deliveryOptions.forEach((option) => {
       if (product.shippingId === option.id) {
         totalCost += option.shippingCostCent;

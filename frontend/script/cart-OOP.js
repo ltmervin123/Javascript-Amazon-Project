@@ -47,7 +47,7 @@ function Cart(localStorageKey) {
     },
   };
 
-  return cart;
+  return cart;  
 }
 
 const cart = Cart("normal-cart");

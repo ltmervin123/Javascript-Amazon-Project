@@ -1,6 +1,5 @@
-import { products } from "../../data/products.js";
-import { cart, findProductInCart, addToCart } from "./cart.js";
-import { currencyFormatter } from "../script/utils/money.js";
+import { products } from "../../data/ClassProduct.js";
+import { Cart } from "./cart-class.js";
 
 const productGrid = document.querySelector(".products-grid");
 const cartQuantity = document.querySelector(".cart-quantity");
@@ -18,16 +17,14 @@ function generateHtml() {
         </div>
 
         <div class="product-rating-container">
-          <img class="product-rating-stars" src="../images/ratings/rating-${
-            products.rating.stars * 10
-          }.png">
+          <img class="product-rating-stars" src="${products.getStar()}">
           <div class="product-rating-count link-primary">
             ${products.rating.count}
           </div>
         </div>
 
         <div class="product-price">
-          $${currencyFormatter(products.priceCents)}
+          $${products.getPrice()}
         </div>
 
         <div class="product-quantity-container">
@@ -82,8 +79,8 @@ addToCartButton.forEach((button) => {
           .querySelector(".product-quantity").value
       ),
     };
-
-    addToCart(currentProduct);
+    const cart = new Cart("normal-cart");
+    cart.addToCart(currentProduct);
     updateCartQuantity();
     addTextEffectWhenItemIsAdded(button);
   });
@@ -91,7 +88,8 @@ addToCartButton.forEach((button) => {
 
 function updateCartQuantity() {
   let quantity = 0;
-  cart.forEach((product) => {
+  const cart = new Cart("normal-cart");
+  cart.cartItem.forEach((product) => {
     quantity += product.quantity;
   });
   cartQuantity.textContent = quantity;

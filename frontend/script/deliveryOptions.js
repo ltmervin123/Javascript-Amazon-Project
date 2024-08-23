@@ -1,5 +1,5 @@
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-import { saveCart, findProductInCart } from "./cart.js";
+import { Cart } from "./cart-class.js";
 export const deliveryOptions = [
   {
     id: "1",
@@ -19,14 +19,16 @@ export const deliveryOptions = [
 ];
 
 export function addShippingId(productId, shippingId) {
-  const matchingProduct = findProductInCart(productId);
+  const cart = new Cart("normal-cart");
+  const matchingProduct = cart.findProductInCart(productId);
   matchingProduct.shippingId = shippingId;
-  saveCart();
+  cart.saveCart();
 }
 
 export function getDeliveryDates(productId) {
   let matchingShippingOption;
-  const matchingProduct = findProductInCart(productId);
+  const cart = new Cart("normal-cart");
+  const matchingProduct = cart.findProductInCart(productId);
 
   deliveryOptions.forEach((option) => {
     if (option.id === matchingProduct.shippingId) {

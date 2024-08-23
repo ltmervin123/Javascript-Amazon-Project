@@ -1,9 +1,5 @@
-import {
-  cart,
-  findProductInCart,
-  deleteProductToTheCart,
-  updateQuantity,
-} from "../cart.js";
+
+import { Cart } from "../cart-class.js";
 import { findProductInfoById } from "../../../data/products.js";
 import {
   getDeliveryDates,
@@ -29,7 +25,8 @@ const checkOutHeaderSection = document.querySelector(
 export function generateOrderSummary() {
   let orderSummaryHtml = "";
   orderSummaryContainer.innerHTML = "";
-  cart.forEach((product) => {
+  const cart = new Cart("normal-cart");
+  cart.cartItem.forEach((product) => {
     let matchingProduct = findProductInfoById(product.productId);
     orderSummaryHtml += `<div class="cart-item-container">
           <div class="delivery-date" data-product-id="${matchingProduct.id}">
@@ -173,7 +170,8 @@ export function generateOrderSummary() {
       ) {
         //Handle quantity input
         if (validateQuantityInput(inputFieldValue)) {
-          updateQuantity(productId, inputFieldValue); // call to update the product quantity
+          const cart = new Cart("normal-cart");
+          cart.updateQuantity(productId, inputFieldValue); // call to update the product quantity
           loadPaymentSummary();
           loadPage(); // Re-render the UI to reflect the changes
           // Hide the input field and 'Save' link
@@ -192,7 +190,8 @@ export function generateOrderSummary() {
   document.querySelectorAll(".js-delete-quantity-link").forEach((button) => {
     button.addEventListener("click", () => {
       const productId = button.getAttribute("data-product-id");
-      deleteProductToTheCart(productId);
+      const cart = new Cart("normal-cart");
+      cart.deleteProductToTheCart(productId);
       loadPaymentSummary();
       loadPage(); // Re-render the UI to reflect the changes
     });
@@ -243,7 +242,8 @@ function validateQuantityInput(quantity) {
 }
 
 function isChecked(deliveryId, productId) {
-  const matchingProduct = findProductInCart(productId);
+  const cart = new Cart("normal-cart");
+  const matchingProduct = cart.findProductInCart(productId);
   return matchingProduct.shippingId === deliveryId;
 }
 
@@ -284,7 +284,6 @@ function reloadDeliveryDates(productId) {
   document.querySelector(
     `.delivery-date[data-product-id="${productId}"]`
   ).innerHTML = `Delivery date: ${getDeliveryDates(productId)}`;
-  console.log(cart);
 }
 
 export function loadPage() {
