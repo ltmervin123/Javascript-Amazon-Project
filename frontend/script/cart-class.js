@@ -53,5 +53,3 @@ export class Cart {
   }
 }
 
-// const normalCart = new Cart("normal-cart");
-// const businessCart = new Cart("business-cart");

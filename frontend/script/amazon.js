@@ -43,6 +43,8 @@ function generateHtml() {
           </select>
         </div>
 
+        ${products.displayChartSize()}
+
         <div class="product-spacer"></div>
 
         <div class="added-to-cart">
