@@ -43,7 +43,7 @@ function generateHtml() {
           </select>
         </div>
 
-        ${products.displayChartSize()}
+        ${products.displayLink()}
 
         <div class="product-spacer"></div>
 
